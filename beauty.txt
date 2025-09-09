@@ -1,0 +1,55 @@
+Pagina de login com senha 3001
+
+botão de ativar promoção (quando o botão promoção estiver ligado aparece uma coluna nas listas de 'cadastro de cliente' com nome 'consultas consluidas' e 'cupons' que armazenara as consultas consluidas de cada cliente e os cupons adquiridos).
+
+quando uma consulta de uma cliente for concluida sera armazenado na linha dessa cliente o valor de ( 0 à 10).
+
+ao completar a 10 consultas concluidas a coluna 'consultas' será zerada e exibe uma mensagem informando que a cliente recebeu um cupom.
+
+cupom será gerado de forma aleatoria, numerico, como link no formato (BEAUTY XXXX), será armazenado e exibido na tabela de 'cadastro de cliente'.
+
+opção de envar cupom via WhatsApp para o número do cliente.
+
+ao clicar no link cupom exibe uma mensagem se o cliente deseja usar o cupom se sim apagara o cupom da lista se não mantem o cupom armazenado.
+
+opção de enviar mensagem via WhatsApp do cliente informando que 'o cupom foi utilizado')
+
+Aba de cadastro de cliente com 2 formularios
+
+formulário com ID (aleatório numérico com 3 dígitos), nome, data de nascimento, idade(calculo automático), telefone, gênero, email, CEP(busca automatica), endereço, complemento, numero de whatsapp.
+
+formulário de assinalação gestante, faz atividade física, faz uso de medicamentos (se sim campo de preenchimento 'qual(is)'), possui queda de pelos, e campo para mais informações, IST se sim assinalar qual(ais) (clamídia, gonorreia, sífilis, HIV, hepatites B, hepatite C, tricomoníase e verrugas genitais).
+
+busca de cliente por ID ou nome ou telefone.
+
+cliente cadastrados são exibidos em uma tabela com as colunas ID, nome (como link que ao clicar exibe os 2 formulários com a opção de editar os dados), data de nascimeto, telefone e ações.
+
+na coluna açoes botão de exclusão.
+
+Aba de agendamento.
+
+exibe um calendário possibilita selecionar uma data para realizar cadastro de consulta e vizualizar consultas ja concluidas.
+
+ao selecionar a data exibira um dropdown para selecionar o cliente do cadastro de clientes e um dropdown para selecionar um horario.
+
+Aba de consultas.
+
+exibe um calendario.
+
+possibilita vizalizar as consultas por dias (ao selecionar o dia uma lista com os clientes agendados com ID, nome (como link para exibir os formulários)) e botão de consulta consuida.
+
+aba de pagamento.
+
+ao concluir consulta sera direcionado para a aba de pagamento.
+
+opção de inserir valor de entrada de caixa e descrição da entrada.
+
+opção de inserir valor de saida de caixa e descrição de saida.
+
+exibe o valor atual do caixa.
+
+opção de exportar movimento de caixa em formato PDF.
+
+crie essa pagina web sem grafico de barras e nem botão de demo.
+
+crie com html, css, java e banco de dados embutido.
