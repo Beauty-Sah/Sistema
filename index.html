@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sistema Beauty Salon</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{ background-color: pink; padding:20px;background:#f8f9fa}
+    .hidden{display:none}
+    .pointer{cursor:pointer}
+    .small{font-size:.9rem}
+    .link-like{color:#0d6efd;text-decoration:underline;cursor:pointer}
+    .badge-coupon{background:#e83e8c;color:white;padding:.25rem .5rem;border-radius:.35rem}
+    .card-body {background-color: pink; display: grid; flex: 1 1 auto; padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x); color: var(--bs-card-color); justify-items: center;}
+    .logo{height: 90px;}
+    .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    background-color: pink;
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 35px;
+}
+  </style>
+</head>
+<body>
+  <div id="loginCard" class="container" style="max-width:420px">
+    <div class="card">
+      <div class="card-body">
+        <img class="logo" src="Imagens/beauty s fundo.png" alt="logo">
+        <h4 class="card-title">Login</h4>
+        <div class="mb-3">
+          <label class="form-label"><strong>Senha</strong></label>
+          <input id="passwordInput" type="password" class="form-control" placeholder="Digite a senha" />
+        </div>
+        <button id="loginBtn" class="btn btn-primary">Entrar</button>
+        <div id="loginMsg" class="mt-3 text-danger small"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="app" class="hidden container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <img class="logo" src="Imagens/beauty s fundo.png" alt="logo">
+      <div>
+        <label class="me-2">Ativar Promoção</label>
+        <input id="promoToggle" type="checkbox" />
+        <button id="logoutBtn" class="btn btn-sm btn-outline-secondary ms-3">Sair</button>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="mainTabs">
+      <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#clientesTab">Cadastro de Clientes</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#agendamentoTab">Agendamento</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#consultasTab">Consultas</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#pagamentoTab">Controle de caixa</a></li>
+    </ul>
+
+    <div class="tab-content mt-3">
+      <!-- Clientes -->
+      <div class="tab-pane fade show active" id="clientesTab">
+        <div class="row">
+          <div class="col-md-5">
+            <h5>Cadastro de Cliente</h5>
+            <form id="clientForm">
+              <input type="hidden" id="editingClientId" />
+
+              <div class="mb-2">
+                <label>Nome</label>
+                <input id="nome" class="form-control" required />
+              </div>
+              <div class="mb-2 d-flex gap-2">
+                <div class="flex-fill">
+                  <label>Data de Nascimento</label>
+                  <input id="nasc" type="date" class="form-control" required />
+                </div>
+                <div style="width:120px">
+                  <label>Idade</label>
+                  <input id="idade" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="mb-2">
+                <label>WhatsApp (ex: 11991234567)</label>
+                <input id="whatsapp" class="form-control" />
+              </div>
+              <div class="mb-2">
+                <label>Gênero</label>
+                <select id="genero" class="form-select"><option value="">--</option><option>Feminino</option><option>Masculino</option><option>Outro</option></select>
+              </div>
+              <div class="mb-2">
+                <label>Email</label>
+                <input id="email" class="form-control" />
+              </div>
+
+              <div class="mb-2 d-flex gap-2">
+                <div class="flex-fill">
+                  <label>CEP</label>
+                  <input id="cep" class="form-control" />
+                </div>
+                <div style="width:140px;align-self:flex-end">
+                  <button id="buscarCep" type="button" class="btn btn-secondary w-100">Buscar CEP</button>
+                </div>
+              </div>
+              <div class="mb-2">
+                <label>Endereço</label>
+                <input id="endereco" class="form-control" />
+              </div>
+              <div class="mb-2 d-flex gap-2">
+                <input id="complemento" class="form-control" placeholder="Complemento" />
+                <input id="numeroCasa" class="form-control" placeholder="Número" />
+              </div>
+
+              <hr />
+              <h6>Formulário de Saúde</h6>
+              <div class="form-check mb-2">
+                <input id="gestante" class="form-check-input" type="checkbox" /> <label class="form-check-label">Gestante</label>
+              </div>
+              <div class="form-check mb-2">
+                <input id="atividadeFisica" class="form-check-input" type="checkbox" /> <label class="form-check-label">Faz atividade física</label>
+              </div>
+              <div class="mb-2">
+                <label>Faz uso de medicamentos?</label>
+                <div class="input-group">
+                  <select id="usoMedicamento" class="form-select"><option value="nao">Não</option><option value="sim">Sim</option></select>
+                  <input id="quaisMedicamentos" class="form-control" placeholder="Qual(is)" />
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <label>Possui queda de pelos?</label>
+                <select id="quedaPelos" class="form-select"><option>Não</option><option>Sim</option></select>
+              </div>
+
+              <div class="mb-2">
+                <label>IST (se sim, marque quais)</label>
+                <div class="form-check"><input id="istChlamydia" class="form-check-input" type="checkbox" /><label class="form-check-label">Clamídia</label></div>
+                <div class="form-check"><input id="istGonorreia" class="form-check-input" type="checkbox" /><label class="form-check-label">Gonorreia</label></div>
+                <div class="form-check"><input id="istSifilis" class="form-check-input" type="checkbox" /><label class="form-check-label">Sífilis</label></div>
+                <div class="form-check"><input id="istHiv" class="form-check-input" type="checkbox" /><label class="form-check-label">HIV</label></div>
+                <div class="form-check"><input id="istHB" class="form-check-input" type="checkbox" /><label class="form-check-label">Hepatite B</label></div>
+                <div class="form-check"><input id="istHC" class="form-check-input" type="checkbox" /><label class="form-check-label">Hepatite C</label></div>
+                <div class="form-check"><input id="istTrico" class="form-check-input" type="checkbox" /><label class="form-check-label">Tricomoníase</label></div>
+                <div class="form-check"><input id="istVerrugas" class="form-check-input" type="checkbox" /><label class="form-check-label">Verrugas genitais</label></div>
+              </div>
+
+              <div class="mb-2">
+                <label>Mais informações</label>
+                <textarea id="maisInfo" class="form-control" rows="2"></textarea>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button id="saveClient" type="submit" class="btn btn-success">Salvar</button>
+                <button id="resetClient" type="button" class="btn btn-secondary">Limpar</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="col-md-7">
+            <h5>Clientes Cadastrados</h5>
+            <div class="mb-2 d-flex gap-2">
+              <input id="searchInput" class="form-control" placeholder="Buscar por ID, nome ou telefone" />
+              <button id="newIdBtn" class="btn btn-outline-secondary">Novo ID Aleatório</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-striped" id="clientsTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Data Nasc</th>
+                    <th>Telefone</th>
+                    <th class="promoCol hidden">Consultas</th>
+                    <th class="promoCol hidden">Cupons</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agendamento -->
+      <div class="tab-pane fade" id="agendamentoTab">
+        <h5>Agendamento</h5>
+        <div class="row mb-3">
+          <div class="col-md-3"><label>Data</label><input id="agData" type="date" class="form-control" /></div>
+          <div class="col-md-4"><label>Cliente</label><select id="agCliente" class="form-select"></select></div>
+          <div class="col-md-3"><label>Horário</label><select id="agHorario" class="form-select"></select></div>
+          <div class="col-md-2 align-self-end"><button id="agendarBtn" class="btn btn-primary w-100">Agendar</button></div>
+        </div>
+        <h6>Consultas Agendadas</h6>
+        <div class="table-responsive">
+          <table class="table" id="agendTable"><thead><tr><th>Data</th><th>Horário</th><th>ID</th><th>Nome</th><th>Ações</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+
+      <!-- Consultas -->
+      <div class="tab-pane fade" id="consultasTab">
+        <h5>Calendário de Consultas</h5>
+        <div class="mb-3">
+          <input id="calDate" type="date" class="form-control" />
+        </div>
+        <div id="dayList"></div>
+      </div>
+
+      <!-- Pagamento -->
+      <div class="tab-pane fade" id="pagamentoTab">
+        <h5>Caixa</h5>
+        <div class="row mb-3">
+          <div class="col-md-4"><input id="valorEntrada" placeholder="Valor entrada (ex: 50.00)" class="form-control" /></div>
+          <div class="col-md-4"><input id="descEntrada" placeholder="Descrição entrada" class="form-control" /></div>
+          <div class="col-md-2"><button id="addEntrada" class="btn btn-success w-100">Registrar Entrada</button></div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-4"><input id="valorSaida" placeholder="Valor saída" class="form-control" /></div>
+          <div class="col-md-4"><input id="descSaida" placeholder="Descrição saída" class="form-control" /></div>
+          <div class="col-md-2"><button id="addSaida" class="btn btn-danger w-100">Registrar Saída</button></div>
+        </div>
+        <div class="mb-3">
+          <strong>Saldo atual: R$ <span id="saldoAtual">0.00</span></strong>
+          <button id="exportPdf" class="btn btn-outline-primary btn-sm ms-3">Exportar movimento (PDF)</button>
+        </div>
+        <div class="table-responsive">
+          <table class="table" id="movTable"><thead><tr><th>Data</th><th>Tipo</th><th>Valor</th><th>Descrição</th><th>Ações</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // ====== UTILIDADES E DB (localStorage) ======
+    const LS = {
+      clients: 'beauty_clients_v1',
+      appointments: 'beauty_appointments_v1',
+      transactions: 'beauty_transactions_v1'
+    };
+
+    function load(key, fallback){ return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+    function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+    // ====== LOGIN ======
+    const PASSWORD = '3001';
+    document.getElementById('loginBtn').addEventListener('click', ()=>{
+      const v = document.getElementById('passwordInput').value.trim();
+      if(v===PASSWORD){ document.getElementById('loginCard').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); initApp(); }
+      else document.getElementById('loginMsg').innerText = 'Senha incorreta';
+    });
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{ location.reload(); });
+
+    // ====== INICIALIZAÇÃO ======
+    function initApp(){
+      renderClientsTable(); populateClientSelect(); setupPromoToggle(); renderAppointments(); renderMovimentos();
+      document.getElementById('clientForm').addEventListener('submit', saveClient);
+      document.getElementById('resetClient').addEventListener('click', ()=>{ document.getElementById('clientForm').reset(); document.getElementById('editingClientId').value=''; document.getElementById('idade').value=''; });
+
+      document.getElementById('nasc').addEventListener('change', ()=>{ const d=document.getElementById('nasc').value; document.getElementById('idade').value = calcAge(d); });
+
+      document.getElementById('buscarCep').addEventListener('click', buscarCep);
+      document.getElementById('newIdBtn').addEventListener('click', ()=>{ alert('ID sugerido: '+randomId()); });
+
+      document.getElementById('searchInput').addEventListener('input', renderClientsTable);
+
+      // Agendamento
+      fillHorarios(); document.getElementById('agendarBtn').addEventListener('click', agendar);
+
+      // Calendario consultas
+      document.getElementById('calDate').addEventListener('change', renderDayList);
+
+      // Caixa
+      document.getElementById('addEntrada').addEventListener('click', ()=>addMov('entrada'));
+      document.getElementById('addSaida').addEventListener('click', ()=>addMov('saida'));
+      document.getElementById('exportPdf').addEventListener('click', exportPdfMov);
+
+      // Promo toggle
+      document.getElementById('promoToggle').addEventListener('change', ()=>{ setupPromoToggle(); renderClientsTable(); });
+    }
+
+    // ====== CLIENTES ======
+    function randomId(){
+      const clients = load(LS.clients, []);
+      let id;
+      do{ id = String(Math.floor(Math.random()*900)+100); } while(clients.some(c=>c.id===id));
+      return id;
+    }
+
+    function saveClient(e){ e.preventDefault();
+      const clients = load(LS.clients, []);
+      const editing = document.getElementById('editingClientId').value;
+      const data = collectClientForm();
+      if(!editing){
+        data.id = randomId(); data.consultas = 0; data.cupons = [];
+        clients.push(data);
+      } else {
+        const idx = clients.findIndex(c=>c.id===editing);
+        data.id = editing; data.consultas = clients[idx].consultas || 0; data.cupons = clients[idx].cupons || [];
+        clients[idx] = data;
+      }
+      save(LS.clients, clients);
+      document.getElementById('clientForm').reset(); document.getElementById('editingClientId').value=''; document.getElementById('idade').value='';
+      renderClientsTable(); populateClientSelect();
+    }
+
+    function collectClientForm(){
+      return {
+        nome: document.getElementById('nome').value.trim(),
+        nasc: document.getElementById('nasc').value,
+        whatsapp: document.getElementById('whatsapp').value.trim(),
+        genero: document.getElementById('genero').value,
+        email: document.getElementById('email').value,
+        cep: document.getElementById('cep').value,
+        endereco: document.getElementById('endereco').value,
+        complemento: document.getElementById('complemento').value,
+        numeroCasa: document.getElementById('numeroCasa').value,
+        gestante: document.getElementById('gestante').checked,
+        atividadeFisica: document.getElementById('atividadeFisica').checked,
+        usoMedicamento: document.getElementById('usoMedicamento').value,
+        quaisMedicamentos: document.getElementById('quaisMedicamentos').value,
+        quedaPelos: document.getElementById('quedaPelos').value,
+        ist: {
+          clamidia: document.getElementById('istChlamydia').checked,
+          gonorreia: document.getElementById('istGonorreia').checked,
+          sifilis: document.getElementById('istSifilis').checked,
+          hiv: document.getElementById('istHiv').checked,
+          hb: document.getElementById('istHB').checked,
+          hc: document.getElementById('istHC').checked,
+          trico: document.getElementById('istTrico').checked,
+          verrugas: document.getElementById('istVerrugas').checked,
+        },
+        maisInfo: document.getElementById('maisInfo').value
+      };
+    }
+
+    function renderClientsTable(){
+      const clients = load(LS.clients, []);
+      const tbody = document.querySelector('#clientsTable tbody'); tbody.innerHTML='';
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const promoOn = document.getElementById('promoToggle').checked;
+      document.querySelectorAll('.promoCol').forEach(el=>{ if(promoOn) el.classList.remove('hidden'); else el.classList.add('hidden'); });
+
+      clients.filter(c=>{
+        if(!q) return true;
+        return c.id.includes(q) || (c.nome||'').toLowerCase().includes(q) || (c.whatsapp||'').includes(q);
+      }).forEach(c=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.id}</td>
+          <td class="link-like" data-id="${c.id}">${escapeHtml(c.nome)}</td>
+          <td>${c.nasc||''}</td>
+          <td>${c.whatsapp||''}</td>
+          <td class="promoCol">${promoOn? (c.consultas||0) : ''}</td>
+          <td class="promoCol">${promoOn? (renderCouponsColumn(c)) : ''}</td>
+          <td>
+            <button class="btn btn-sm btn-primary editBtn" data-id="${c.id}">Editar</button>
+            <button class="btn btn-sm btn-danger delBtn" data-id="${c.id}">Excluir</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // eventos
+      document.querySelectorAll('#clientsTable td.link-like').forEach(td=> td.addEventListener('click', (e)=>{ const id = e.target.dataset.id; openClientEditor(id); }));
+      document.querySelectorAll('.editBtn').forEach(b=> b.addEventListener('click', e=> openClientEditor(e.target.dataset.id)));
+      document.querySelectorAll('.delBtn').forEach(b=> b.addEventListener('click', e=> deleteClient(e.target.dataset.id)));
+      document.querySelectorAll('.coupon-link').forEach(a=> a.addEventListener('click', (ev)=>{ ev.preventDefault(); handleCouponClick(ev.target.dataset.id, ev.target.dataset.code); }));
+      document.querySelectorAll('.coupon-send-wa').forEach(b=> b.addEventListener('click', (ev)=>{ const id=ev.target.dataset.id; const code=ev.target.dataset.code; sendWhatsAppToClient(id, `Seu cupom: ${code}`); }));
+      document.querySelectorAll('.coupon-use').forEach(b=> b.addEventListener('click', (ev)=>{ const id=ev.target.dataset.id; const code=ev.target.dataset.code; useCoupon(id, code); }));
+    }
+
+    function renderCouponsColumn(c){
+      if(!c.cupons || c.cupons.length===0) return '';
+      return c.cupons.map(code=> `<span class="badge-coupon me-1">${code} <a href="#" class="coupon-link text-white ms-1" data-id="${c.id}" data-code="${code}">[usar]</a></span>`).join(' ');
+    }
+
+    function openClientEditor(id){
+      const clients = load(LS.clients, []); const c = clients.find(x=>x.id===id); if(!c) return;
+      document.getElementById('editingClientId').value = c.id;
+      document.getElementById('nome').value = c.nome || '';
+      document.getElementById('nasc').value = c.nasc || '';
+      document.getElementById('idade').value = calcAge(c.nasc);
+      document.getElementById('whatsapp').value = c.whatsapp || '';
+      document.getElementById('genero').value = c.genero || '';
+      document.getElementById('email').value = c.email || '';
+      document.getElementById('cep').value = c.cep || '';
+      document.getElementById('endereco').value = c.endereco || '';
+      document.getElementById('complemento').value = c.complemento || '';
+      document.getElementById('numeroCasa').value = c.numeroCasa || '';
+      document.getElementById('gestante').checked = c.gestante||false;
+      document.getElementById('atividadeFisica').checked = c.atividadeFisica||false;
+      document.getElementById('usoMedicamento').value = c.usoMedicamento||'nao';
+      document.getElementById('quaisMedicamentos').value = c.quaisMedicamentos||'';
+      document.getElementById('quedaPelos').value = c.quedaPelos||'Não';
+      document.getElementById('istChlamydia').checked = c.ist?.clamidia||false;
+      document.getElementById('istGonorreia').checked = c.ist?.gonorreia||false;
+      document.getElementById('istSifilis').checked = c.ist?.sifilis||false;
+      document.getElementById('istHiv').checked = c.ist?.hiv||false;
+      document.getElementById('istHB').checked = c.ist?.hb||false;
+      document.getElementById('istHC').checked = c.ist?.hc||false;
+      document.getElementById('istTrico').checked = c.ist?.trico||false;
+      document.getElementById('istVerrugas').checked = c.ist?.verrugas||false;
+      document.getElementById('maisInfo').value = c.maisInfo||'';
+      // switch to clientes tab
+      const tab = new bootstrap.Tab(document.querySelector('#mainTabs a[href="#clientesTab"]')); tab.show();
+    }
+
+    function deleteClient(id){ if(!confirm('Excluir cliente?')) return; const clients = load(LS.clients, []); const filtered = clients.filter(c=>c.id!==id); save(LS.clients, filtered); renderClientsTable(); populateClientSelect(); }
+
+    // ====== PROMOÇÃO E CUPONS ======
+    function setupPromoToggle(){ const on = document.getElementById('promoToggle').checked; document.querySelectorAll('.promoCol').forEach(c=>{ if(on) c.classList.remove('hidden'); else c.classList.add('hidden'); }); }
+
+    function incrementConsultation(clientId){
+      const clients = load(LS.clients, []); const c = clients.find(x=>x.id===clientId); if(!c) return;
+      c.consultas = (c.consultas||0) + 1;
+      if(c.consultas >= 10){ c.consultas = 0; const coupon = generateCoupon(); c.cupons = c.cupons || []; c.cupons.push(coupon); // enviar whatsapp
+        save(LS.clients, clients); renderClientsTable(); populateClientSelect();
+        // abrir link wa.me para enviar mensagem com cupom
+        sendWhatsAppToClient(clientId, `Parabéns! Você recebeu um cupom: ${coupon}`);
+        alert('Cliente recebeu cupom: '+coupon);
+      } else {
+        save(LS.clients, clients); renderClientsTable();
+      }
+    }
+
+    function generateCoupon(){
+      const num = Math.floor(Math.random()*9000)+1000; return `BEAUTY ${num}`;
+    }
+
+    function handleCouponClick(clientId, code){
+      if(confirm(`Deseja usar o cupom ${code}?`)){
+        useCoupon(clientId, code);
+      }
+    }
+
+    function useCoupon(clientId, code){
+      const clients = load(LS.clients, []); const c = clients.find(x=>x.id===clientId); if(!c) return; const idx = c.cupons.indexOf(code); if(idx===-1){ alert('Cupom não encontrado'); return; }
+      if(!confirm('Confirmar uso do cupom?')) return;
+      c.cupons.splice(idx,1); save(LS.clients, clients); renderClientsTable();
+      // enviar whatsapp que cupom foi utilizado
+      sendWhatsAppToClient(clientId, `Seu cupom ${code} foi utilizado.`);
+      alert('Cupom utilizado e mensagem preparada para envio via WhatsApp.');
+    }
+
+    function sendWhatsAppToClient(clientId, message){
+      const clients = load(LS.clients, []); const c = clients.find(x=>x.id===clientId); if(!c) return; const raw = (c.whatsapp||'').replace(/\D/g,''); let num = raw;
+      if(raw.length===11) num = '55'+raw; // assume br
+      // open wa.me link
+      const link = `https://wa.me/${num}?text=${encodeURIComponent(message)}`;
+      window.open(link, '_blank');
+    }
+
+    // ====== CEP ======
+    async function buscarCep(){ const cep = document.getElementById('cep').value.replace(/\D/g,''); if(!cep) return alert('Informe o CEP');
+      try{
+        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await res.json(); if(data.erro) return alert('CEP não encontrado');
+        document.getElementById('endereco').value = `${data.logradouro} ${data.bairro} ${data.localidade}-${data.uf}`;
+      }catch(err){ alert('Erro ao buscar CEP'); }
+    }
+
+    function calcAge(dob){ if(!dob) return ''; const diff = Date.now() - new Date(dob).getTime(); return Math.floor(diff / (1000*60*60*24*365.25)); }
+
+    function escapeHtml(unsafe){ return unsafe ? unsafe.replace(/[&<"']/g, function(m){ return {'&':'&amp;','<':'&lt;','"':'&quot;',"'":"&#039;"}[m]; }) : ''; }
+
+    // ====== AGENDAMENTOS ======
+    function populateClientSelect(){ const sel = document.getElementById('agCliente'); sel.innerHTML=''; const clients = load(LS.clients, []); clients.forEach(c=>{ const opt = document.createElement('option'); opt.value=c.id; opt.text = `${c.id} - ${c.nome}`; sel.appendChild(opt); }); renderAppointments(); }
+
+    function fillHorarios(){ const sel = document.getElementById('agHorario'); sel.innerHTML=''; const horarios = ['09:00','10:00','11:00','13:00','14:00','15:00','16:00']; horarios.forEach(h=>{ const opt=document.createElement('option'); opt.value=h; opt.text=h; sel.appendChild(opt); }); }
+
+    function agendar(){ const data = document.getElementById('agData').value; const cliente = document.getElementById('agCliente').value; const horario = document.getElementById('agHorario').value; if(!data||!cliente||!horario) return alert('Preencha data, cliente e horário');
+      const appts = load(LS.appointments, []);
+      appts.push({date:data,time:horario,clientId:cliente,done:false}); save(LS.appointments, appts); renderAppointments(); alert('Agendado');
+    }
+
+    function renderAppointments(){ const appts = load(LS.appointments, []); const tbody = document.querySelector('#agendTable tbody'); tbody.innerHTML='';
+      appts.forEach((a, i)=>{
+        const clients = load(LS.clients, []); const c = clients.find(x=>x.id===a.clientId) || {nome:'--', whatsapp:''};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${a.date}</td><td>${a.time}</td><td>${a.clientId}</td><td class="link-like" data-id="${a.clientId}">${escapeHtml(c.nome)}</td><td><button class="btn btn-sm btn-success concludeBtn" data-i="${i}">Consulta concluída</button> <button class="btn btn-sm btn-danger delAg" data-i="${i}">Excluir</button></td>`;
+        tbody.appendChild(tr);
+      });
+      document.querySelectorAll('.concludeBtn').forEach(b=> b.addEventListener('click', e=> concludeAppointment(e.target.dataset.i)));
+      document.querySelectorAll('.delAg').forEach(b=> b.addEventListener('click', e=> deleteAppointment(e.target.dataset.i)));
+      document.querySelectorAll('#agendTable td.link-like').forEach(td=> td.addEventListener('click', (e)=> openClientEditor(e.target.dataset.id)));
+    }
+
+    function concludeAppointment(index){ const appts = load(LS.appointments, []); const a = appts[index]; if(!a) return; a.done = true; save(LS.appointments, appts); // incrementar consultas e abrir aba pagamento
+      incrementConsultation(a.clientId);
+      // redirect to pagamento tab
+      const tab = new bootstrap.Tab(document.querySelector('#mainTabs a[href="#pagamentoTab"]')); tab.show(); renderAppointments();
+    }
+
+    function deleteAppointment(index){ if(!confirm('Excluir agendamento?')) return; const appts = load(LS.appointments, []); appts.splice(index,1); save(LS.appointments, appts); renderAppointments(); }
+
+    // ====== CONSULTAS (calendario simples) ======
+    function renderDayList(){ const date = document.getElementById('calDate').value; const appts = load(LS.appointments, []); const filtered = appts.filter(a=>a.date===date);
+      const container = document.getElementById('dayList'); container.innerHTML=''; if(!date) return container.innerHTML='<div class="alert alert-info">Selecione uma data</div>';
+      if(filtered.length===0) return container.innerHTML='<div class="alert alert-secondary">Nenhuma consulta neste dia</div>';
+      const table = document.createElement('table'); table.className='table'; table.innerHTML='<thead><tr><th>ID</th><th>Nome</th><th>Horário</th><th>Ações</th></tr></thead>';
+      const tbody = document.createElement('tbody');
+      filtered.forEach((a,i)=>{
+        const clients = load(LS.clients, []); const c = clients.find(x=>x.id===a.clientId) || {nome:'--'};
+        const tr = document.createElement('tr'); tr.innerHTML = `<td>${a.clientId}</td><td class="link-like" data-id="${a.clientId}">${escapeHtml(c.nome)}</td><td>${a.time}</td><td><button class="btn btn-sm btn-success concludeDay" data-client="${a.clientId}">Consulta concluída</button></td>`; tbody.appendChild(tr);
+      });
+      table.appendChild(tbody); container.appendChild(table);
+      document.querySelectorAll('.concludeDay').forEach(b=> b.addEventListener('click', e=>{ incrementConsultation(e.target.dataset.client); }));
+      document.querySelectorAll('#dayList td.link-like').forEach(td=> td.addEventListener('click', (e)=> openClientEditor(e.target.dataset.id)));
+    }
+
+    // ====== CAIXA / MOVIMENTAÇÕES ======
+    function addMov(tipo){ const val = parseFloat((tipo==='entrada'? document.getElementById('valorEntrada').value : document.getElementById('valorSaida').value) || 0); const desc = (tipo==='entrada'? document.getElementById('descEntrada').value : document.getElementById('descSaida').value) || '';
+      if(isNaN(val) || val<=0) return alert('Informe um valor válido');
+      const movs = load(LS.transactions, []);
+      movs.push({date:new Date().toLocaleString(), type: tipo, value: val, desc}); save(LS.transactions, movs); renderMovimentos(); alert('Movimentação registrada');
+    }
+
+    function renderMovimentos(){ const movs = load(LS.transactions, []); const tbody = document.querySelector('#movTable tbody'); tbody.innerHTML=''; let saldo = 0; movs.forEach((m,i)=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${m.date}</td><td>${m.type}</td><td>R$ ${m.value.toFixed(2)}</td><td>${escapeHtml(m.desc)}</td><td><button class="btn btn-sm btn-danger delMov" data-i="${i}">Apagar</button></td>`; tbody.appendChild(tr); saldo += (m.type==='entrada'? m.value : -m.value); }); document.getElementById('saldoAtual').innerText = saldo.toFixed(2); document.querySelectorAll('.delMov').forEach(b=> b.addEventListener('click', e=> deleteMov(e.target.dataset.i)));
+    }
+
+    function deleteMov(i){ if(!confirm('Apagar registro?')) return; const movs = load(LS.transactions, []); movs.splice(i,1); save(LS.transactions, movs); renderMovimentos(); }
+
+    async function exportPdfMov(){ const movs = load(LS.transactions, []);
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF(); doc.setFontSize(12); doc.text('Movimentações - Sistema Beauty', 10, 10);
+      let y = 20; movs.forEach(m=>{ doc.text(`${m.date} | ${m.type} | R$ ${m.value.toFixed(2)} | ${m.desc}`, 10, y); y += 8; if(y>280){ doc.addPage(); y=20; } }); doc.save('movimentacoes.pdf');
+    }
+
+    // ======= HELPERS ======
+    function deleteMovByIndex(i){ const movs = load(LS.transactions, []); movs.splice(i,1); save(LS.transactions, movs); renderMovimentos(); }
+
+    // ======== INICIAL RENDER ========
+    // se quiser popular com dados de teste descomente
+    // if(!localStorage.getItem(LS.clients)) save(LS.clients, []);
+
+  </script>
+</body>
+</html>
